@@ -9,46 +9,59 @@ public class Poll {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pollID;
 
-    private String title;
+    @Column(name = "PollID")
+    private int PollID;
+
+    @Column(name = "Title")
+    private String Title;
+
+    @Column(name = "type")
     private String type;
 
+    @Column(name = "PollDate")
     @Temporal(TemporalType.DATE)
-    private Date pollDate;
+    private Date PollDate;
 
-    private int totalVote;
-    private int adminID;
-    private int categoryID;
+    @Column(name = "TotalValue")
+    private int TotalValue;
+
+    @Column(name = "AdminID")
+    private int AdminID;
+
+    @Column(name = "CategoryID")
+    private int CategoryID;
+
+
 
     // Constructors
     public Poll() {}
 
     public Poll(int pollID, String title, String type, Date pollDate, int totalVote, int adminID, int categoryID) {
-        this.pollID = pollID;
-        this.title = title;
+        this.PollID = pollID;
+        this.Title = title;
         this.type = type;
-        this.pollDate = pollDate;
-        this.totalVote = totalVote;
-        this.adminID = adminID;
-        this.categoryID = categoryID;
+        this.PollDate = pollDate;
+        this.TotalValue = totalVote;
+        this.AdminID = adminID;
+        this.CategoryID = categoryID;
     }
 
     // Getters and setters
     public int getPollID() {
-        return pollID;
+        return PollID;
     }
 
     public void setPollID(int pollID) {
-        this.pollID = pollID;
+        this.PollID = PollID;
     }
 
     public String getTitle() {
-        return title;
+        return Title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.Title = Title;
     }
 
     public String getType() {
@@ -60,34 +73,35 @@ public class Poll {
     }
 
     public Date getPollDate() {
-        return pollDate;
+        return PollDate;
     }
 
     public void setPollDate(Date pollDate) {
-        this.pollDate = pollDate;
+        this.PollDate = PollDate;
     }
 
     public int getTotalVote() {
-        return totalVote;
+        return TotalValue;
     }
 
     public void setTotalVote(int totalVote) {
-        this.totalVote = totalVote;
+        this.TotalValue = TotalValue;
     }
 
     public int getAdminID() {
-        return adminID;
+        return AdminID;
     }
 
     public void setAdminID(int adminID) {
-        this.adminID = adminID;
+        this.AdminID = AdminID;
     }
 
     public int getCategoryID() {
-        return categoryID;
+        return CategoryID;
     }
 
     public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
+        this.CategoryID = CategoryID;
     }
+
 }

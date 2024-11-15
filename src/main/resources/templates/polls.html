@@ -19,11 +19,11 @@
     </thead>
     <tbody>
     <tr th:each="poll : ${polls}">
-        <td th:text="${poll.pollID}">No ID</td>
-        <td th:text="${poll.title}">No Title</td>
-        <td th:text="${poll.type}">No Type</td>
-        <td th:text="${#dates.format(poll.pollDate, 'yyyy-MM-dd')}">No Date</td>
-        <td th:text="${poll.totalVote}">No Votes</td>
+        <td th:text="${poll.PollID}"></td>
+        <td th:text="${poll.Title}"></td>
+        <td th:text="${poll.type}"></td>
+        <td th:text="${#dates.format(poll.pollDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${poll.TotalValue}"></td>
     </tr>
     <tr th:if="${polls.size() == 0}">
         <td colspan="5">No polls available</td>
