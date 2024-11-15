@@ -10,4 +10,5 @@ public class OnlineVotingSystemApplication {
         SpringApplication.run(OnlineVotingSystemApplication.class, args);
     }
 
+
 }
