@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "poll") // Matches the exact table name in your database
+@Table(name = "poll")
 public class Poll {
 
     @Id

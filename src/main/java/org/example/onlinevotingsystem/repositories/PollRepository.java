@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Integer> {
-    // JpaRepository provides built-in methods like findAll()
 }
