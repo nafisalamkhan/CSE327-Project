@@ -16,4 +16,10 @@ public class PollService {
     public List<Poll> getAllPolls() {
         return pollRepository.findAll();
     }
+
+    public void testRepository() {
+        List<Poll> polls = pollRepository.findAll();
+        System.out.println("Polls fetched: " + polls.size());
+    }
+
 }
