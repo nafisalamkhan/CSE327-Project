@@ -4,28 +4,38 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "poll")
+@Table(name = "poll") // Matches the table name in your MySQL database
 public class Poll {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generates the primary key
+    @Column(name = "PollID") // Matches the "PollID" column in the database
     private int pollID;
 
+    @Column(name = "Title", nullable = false, length = 200) // Matches the "Title" column
     private String title;
+
+    @Column(name = "type", length = 10) // Matches the "type" column, allows null by default
     private String type;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP) // Maps to a DATETIME column in MySQL
+    @Column(name = "PollDate") // Matches the "PollDate" column
     private Date pollDate;
 
+    @Column(name = "TotalVote", columnDefinition = "INT DEFAULT 0") // Matches the "TotalVote" column
     private int totalVote;
+
+    @Column(name = "AdminID", nullable = false) // Matches the "AdminID" column
     private int adminID;
+
+    @Column(name = "CategoryID", nullable = false) // Matches the "CategoryID" column
     private int categoryID;
 
-    // Constructors
+    // Default constructor required by JPA
     public Poll() {}
 
-    public Poll(int pollID, String title, String type, Date pollDate, int totalVote, int adminID, int categoryID) {
-        this.pollID = pollID;
+    // Parameterized constructor (excluding pollID, which is auto-generated)
+    public Poll(String title, String type, Date pollDate, int totalVote, int adminID, int categoryID) {
         this.title = title;
         this.type = type;
         this.pollDate = pollDate;
