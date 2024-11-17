@@ -1,23 +1,20 @@
 package org.example.onlinevotingsystem.controllers;
 
-import org.example.onlinevotingsystem.models.poll.Poll;
 import org.example.onlinevotingsystem.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@RestController
+@Controller
 public class PollController {
 
     @Autowired
-    PollRepository pollRepository;
+    private PollRepository pollRepository;
 
-    @GetMapping(path = "getdata")
-    List<Poll> getPolls(){
-        return pollRepository.findAll();
-
+    @GetMapping(path = "/polls")
+    public String getPolls(Model model) {
+        model.addAttribute("polls", pollRepository.findAll());
+        return "polls";
     }
-
 }
