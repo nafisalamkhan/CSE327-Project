@@ -1,8 +1,6 @@
 package org.example.onlinevotingsystem.models;
 
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,45 +8,34 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "poll")
+@Table(name = "options")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Poll {
+public class Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PollID")
-    private int pollId;
+    @Column(name = "OptionID")
+    private int optionId;
 
     @Column(name = "Title", nullable = false)
     private String title;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "VoteCount")
+    private int voteCount;
 
-    @Column(name = "PollDate")
-    private String pollDate;
-
-    @Column(name = "TotalVote")
-    private int totalVote;
+    @Column(name = "VotePercentage")
+    private int votePercentage;
 
     @ManyToOne
-    @JoinColumn(name = "AdminID", nullable = false)
-    private Admin admin;
-
-    @ManyToOne
-    @JoinColumn(name = "CategoryID", nullable = false)
-    private Category category;
-
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL)
-    private List<Option> options;
+    @JoinColumn(name = "PollID", nullable = false)
+    private Poll poll;
 
 }
