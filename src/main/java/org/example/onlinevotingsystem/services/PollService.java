@@ -1,6 +1,6 @@
 package org.example.onlinevotingsystem.services;
 
-import org.example.onlinevotingsystem.models.poll.Poll;
+import org.example.onlinevotingsystem.models.Poll;
 import org.example.onlinevotingsystem.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

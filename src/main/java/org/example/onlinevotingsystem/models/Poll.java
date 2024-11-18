@@ -1,4 +1,4 @@
-package org.example.onlinevotingsystem.models.poll;
+package org.example.onlinevotingsystem.models;
 
 import jakarta.persistence.*;
 import java.util.Date;
