@@ -22,6 +22,10 @@ class Voter implements IVoterObserver {
 }
 
 // Subject Interface
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 interface IPollObservable {
     void registerObserver(IVoterObserver observer);
     void removeObserver(IVoterObserver observer);
@@ -30,10 +34,6 @@ interface IPollObservable {
 }
 
 // Concrete Subject
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 class NotificationService implements IPollObservable {
     private List<IVoterObserver> observers = new ArrayList<>();
 
@@ -62,10 +62,11 @@ class NotificationService implements IPollObservable {
     }
 }
 
-
 // Admin Class
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 class Admin {
     private NotificationService notificationService;
@@ -80,15 +81,26 @@ class Admin {
         notificationService.notifyObservers("Dear " + voter.getName() + ", your registration has been approved!");
     }
 
+    // Generate random results for voters
+    private String generateRandomResult() {
+        Random random = new Random();
+        int percentage = random.nextInt(101); // Generates a number between 0 and 100
+        return percentage + "%";
+    }
+
     // Publish results for individual voters
-    public void publishResults(Map<Voter, String> voterResults) {
-        Map<VoterObserver, String> personalizedMessages = new HashMap<>();
-        for (Map.Entry<Voter, String> entry : voterResults.entrySet()) {
-            personalizedMessages.put(entry.getKey(), "Your quiz result: " + entry.getValue());
+    public void publishResults(List<Voter> voters) {
+        Map<IVoterObserver, String> personalizedMessages = new HashMap<>();
+        for (Voter voter : voters) {
+            String result = generateRandomResult();
+            personalizedMessages.put(voter, "Your quiz result: " + result);
         }
         notificationService.notifyIndividualObservers(personalizedMessages);
     }
 }
+
+// Main Class
+import java.util.List;
 
 public class OnlineVotingSystem {
     public static void main(String[] args) {
@@ -109,11 +121,7 @@ public class OnlineVotingSystem {
         admin.approveVoter(voter3);  // Notification sent to Charlie
 
         // Publish individual results
-        Map<Voter, String> results = new HashMap<>();
-        results.put(voter1, "80%");
-        results.put(voter2, "90%");
-        results.put(voter3, "70%");
-
-        admin.publishResults(results); // Personalized notifications sent
+        List<Voter> voters = List.of(voter1, voter2, voter3);
+        admin.publishResults(voters); // Personalized notifications sent with random results
     }
 }
