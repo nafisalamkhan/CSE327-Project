@@ -1,16 +1,9 @@
 package org.example.onlinevotingsystem.models;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Voter {
-
 
     @Id
     @Column(name = "NID", nullable = false)
@@ -45,7 +37,24 @@ public class Voter {
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 
-    private String role = "ROLE_USER";
+    private String role;
+
+    @ManyToMany
+    @JoinTable(name = "voted_polls", joinColumns = @JoinColumn(name = "NID"), inverseJoinColumns = @JoinColumn(name = "PollID"))
+    private List<Poll> votedPolls;
+
+    @ManyToMany(mappedBy = "subscribedVoters")
+    private List<Poll> subscribedPolls = new ArrayList<>();
+
+    public void addSubscribedPoll(Poll poll) {
+        subscribedPolls.add(poll);
+    }
+
+    public void removeSubscribedPoll(Poll poll) {
+        subscribedPolls.remove(poll);
+
+    }
+    
 
 
 }

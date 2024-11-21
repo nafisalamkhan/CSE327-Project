@@ -35,12 +35,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.votingsystem.VotingSystem.Repository.VoterRepository;
-import com.votingsystem.VotingSystem.Service.NotificationService;
-import com.votingsystem.VotingSystem.Service.PollService;
-import com.votingsystem.VotingSystem.model.Notification;
-import com.votingsystem.VotingSystem.model.Poll;
-import com.votingsystem.VotingSystem.model.Voter;
+import org.example.onlinevotingsystem.repositories.VoterRepository;
+import org.example.onlinevotingsystem.services.NotificationService;
+import org.example.onlinevotingsystem.services.PollService;
+import org.example.onlinevotingsystem.models.Notification;
+import org.example.onlinevotingsystem.models.Poll;
+import org.example.onlinevotingsystem.models.Voter;
 
 @Controller
 public class PollController {
