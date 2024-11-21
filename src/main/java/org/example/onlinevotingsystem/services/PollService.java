@@ -6,8 +6,13 @@ import org.example.onlinevotingsystem.repositories.OptionRepository;
 import org.example.onlinevotingsystem.repositories.PollRepository;
 import org.example.onlinevotingsystem.repositories.VoterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.example.onlinevotingsystem.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
 import org.example.onlinevotingsystem.repositories.*;
@@ -28,20 +33,39 @@ public class PollService {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private AdminService adminService;
+    private VoterService adminService;
 
     @Autowired
     private VoterRepository voterRepository;
 
+    //factory
+    private final Map<String, PollFactory> factories;
+
+    public PollService() {
+
+        factories = new HashMap<>();
+        factories.put("OPEN", new OpenPollFactory());
+        factories.put("TIME", new TimePollFactory());
+    }
+
+
     public List<Poll> getAllPolls() {
+
         return pollRepository.findAll();
     }
 
-    public void createPollWithOptions(Poll poll, List<String> optionTitles) {
+    public void createPollWithOptions(PollRequest poll, List<String> optionTitles, String type) {
 
-        poll.setAdmin(adminService.getAdminByEmail(Constants.ADMIN_TYPE_1_EMAIL));
-        Poll savedPoll = pollRepository.save(poll);
 
+        Optional<Voter> adminUser = adminService.getVoterByUsername(Constants.ADMIN_TYPE_1_USER_NAME);
+
+        if (adminUser.isPresent()) {
+            poll.setAdmin(adminUser.get());
+        }
+
+        PollFactory factory = factories.get(type);
+        Poll newPoll = factory.createPoll(poll);
+        Poll savedPoll = pollRepository.save(newPoll);
 
         for (String title : optionTitles) {
             Option option = new Option();
