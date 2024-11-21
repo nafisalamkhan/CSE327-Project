@@ -42,6 +42,7 @@ import org.example.onlinevotingsystem.models.Notification;
 import org.example.onlinevotingsystem.models.Poll;
 import org.example.onlinevotingsystem.models.Voter;
 
+
 @Controller
 public class PollController {
 
