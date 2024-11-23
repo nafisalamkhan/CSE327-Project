@@ -35,7 +35,7 @@ public class Poll {
 
     @ManyToOne
     @JoinColumn(name = "AdminID", nullable = false)
-    private Admin admin;
+    private Voter admin;
 
     @ManyToOne
     @JoinColumn(name = "CategoryID", nullable = false)

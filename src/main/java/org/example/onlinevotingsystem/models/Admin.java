@@ -18,7 +18,7 @@ public class Admin {
     private int adminId;
 
     @Column(name = "Name", nullable = false, length = 32)
-    private String name;
+    private String username;
 
     @Column(name = "Email")
     private String email;
