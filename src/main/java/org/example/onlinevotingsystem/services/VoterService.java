@@ -1,22 +1,20 @@
 package org.example.onlinevotingsystem.services;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import org.example.onlinevotingsystem.models.Voter;
+import org.example.onlinevotingsystem.repositories.VoterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import org.example.onlinevotingsystem.repositories.VoterRepository;
-import org.example.onlinevotingsystem.models.Voter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-public class VoterService implements UserDetailsService {
+public class VoterService {
 
     @Autowired
     private VoterRepository voterRepository;
@@ -50,7 +48,6 @@ public class VoterService implements UserDetailsService {
         voterRepository.save(voter);
     }
 
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Voter voter = voterRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
