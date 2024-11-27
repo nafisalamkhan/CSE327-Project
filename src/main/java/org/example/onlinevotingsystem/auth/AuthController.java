@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 public class AuthController {
     private final UserService userService;
@@ -35,5 +37,25 @@ public class AuthController {
     public String login(@RequestParam(required = false) String error, Model model) {
         model.addAttribute("error", error);
         return "login";
+    }
+
+    @GetMapping("/index")
+    public String showIndexPage(Principal principal) {
+        String username = principal.getName();
+
+        if ("admin-1".equals(username) || "admin-2".equals(username)) {
+            return "redirect:/admin-index";
+        }
+        return "redirect:/polls";
+    }
+
+    @GetMapping("/")
+    public String showHomePage(Principal principal) {
+        String username = principal.getName();
+
+        if ("admin-1".equals(username) || "admin-2".equals(username)) {
+            return "redirect:/admin-index";
+        }
+        return "redirect:/polls";
     }
 }

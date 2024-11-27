@@ -4,6 +4,7 @@ package org.example.onlinevotingsystem.services;
 
 import java.util.List;
 
+import org.example.onlinevotingsystem.auth.User;
 import org.example.onlinevotingsystem.models.Notification;
 import org.example.onlinevotingsystem.models.Voter;
 import org.example.onlinevotingsystem.repositories.NotificationRepository;
@@ -37,6 +38,19 @@ public class NotificationService {
     public List<Notification> getAllNotifications(Voter voter) {
 
         return notificationRepository.findByRecipient(voter);
+
+    }
+
+
+
+
+
+
+
+    public void setNotificationToAdmin(String role){
+
+        // get admin by role
+        // get all user with role admin
 
     }
 
