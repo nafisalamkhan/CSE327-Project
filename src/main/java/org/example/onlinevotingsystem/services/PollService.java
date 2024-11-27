@@ -1,5 +1,8 @@
 package org.example.onlinevotingsystem.services;
 
+import org.example.onlinevotingsystem.DecoratorPattern.BasePollDecorator;
+import org.example.onlinevotingsystem.DecoratorPattern.IPollDecorator;
+import org.example.onlinevotingsystem.DecoratorPattern.NotificationDecorator;
 import org.example.onlinevotingsystem.models.Poll;
 import org.example.onlinevotingsystem.repositories.NotificationRepository;
 import org.example.onlinevotingsystem.repositories.OptionRepository;
@@ -101,6 +104,17 @@ public class PollService {
         Poll updatedPoll = pollRepository.save(poll);
         updatedPoll.notifyVoters("The poll '" + poll.getTitle() + "' has been updated.", notificationRepository, username);
     }
+
+    //decorator notification
+    private void sendNotification(Poll updatePoll, String username){
+        IPollDecorator pollDecorator= new BasePollDecorator(updatePoll);
+        pollDecorator = new NotificationDecorator(pollDecorator, notificationRepository);
+
+        pollDecorator.performOperation("The poll '" + updatePoll.getTitle() + "' has been updated.", username, updatePoll.getSubscribedVoters());
+
+    }
+
+
 
     public String subscribeToPoll(Long pollId, String username) {
         Voter voter = voterRepository.findByUsername(username)
