@@ -1,9 +1,9 @@
 package org.example.onlinevotingsystem;
 
-import org.example.onlinevotingsystem.auth.Role;
-import org.example.onlinevotingsystem.auth.RoleRepository;
-import org.example.onlinevotingsystem.auth.User;
-import org.example.onlinevotingsystem.auth.UserRepository;
+import org.example.onlinevotingsystem.models.Role;
+import org.example.onlinevotingsystem.repositories.RoleRepository;
+import org.example.onlinevotingsystem.models.User;
+import org.example.onlinevotingsystem.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,15 +25,25 @@ public class OnlineVotingSystemApplication {
         return args -> {
             if (roleRepository.findByName("ROLE_USER").isEmpty()) {
                 roleRepository.save(new Role("ROLE_USER"));
-                roleRepository.save(new Role("ROLE_ADMIN"));
+                roleRepository.save(new Role("ROLE_ADMIN_POLL_Manager"));
+                roleRepository.save(new Role("ROLE_ADMIN_USER_Approver"));
 
                 User admin = new User();
                 admin.setName("Super Admin");
-                admin.setUsername("admin");
-                admin.setEmail("admin@example.com");
-                admin.setPassword(passwordEncoder.encode("123"));
+                admin.setUsername("admin-1");
+                admin.setEmail("admin-1@example.com");
+                admin.setPassword(passwordEncoder.encode("12345678"));
                 admin.setEnabled(true);
-                admin.setRoles(Set.of(roleRepository.findByName("ROLE_ADMIN").get()));
+                admin.setRoles(Set.of(roleRepository.findByName("ROLE_ADMIN_POLL_Manager").get()));
+                userRepository.save(admin);
+
+                admin = new User();
+                admin.setName("Super Admin");
+                admin.setUsername("admin-2");
+                admin.setEmail("admin-2@example.com");
+                admin.setPassword(passwordEncoder.encode("12345678"));
+                admin.setEnabled(true);
+                admin.setRoles(Set.of(roleRepository.findByName("ROLE_ADMIN_USER_Approver").get()));
                 userRepository.save(admin);
             }
         };

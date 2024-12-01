@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification {
-    public Notification(String message, Voter recipient, Poll relatedPoll, NotificationType type) {
+    public Notification(String message, User recipient, Poll relatedPoll, NotificationType type) {
         this.message = message;
         this.recipient = recipient;
         this.relatedPoll = relatedPoll;
@@ -45,7 +45,7 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "nid")
-    private Voter recipient;
+    private User recipient;
 
     @ManyToOne
     @JoinColumn(name = "PollID")

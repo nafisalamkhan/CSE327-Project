@@ -1,4 +1,4 @@
-package org.example.onlinevotingsystem.auth;
+package org.example.onlinevotingsystem.models;
 
 import jakarta.persistence.*;
 

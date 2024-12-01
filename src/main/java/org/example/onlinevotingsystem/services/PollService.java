@@ -60,7 +60,7 @@ public class PollService {
     public void createPollWithOptions(PollRequest poll, List<String> optionTitles, String type) {
 
 
-        Optional<Voter> adminUser = adminService.getVoterByUsername(Constants.ADMIN_TYPE_1_USER_NAME);
+        Optional<User> adminUser = adminService.getVoterByUsername(Constants.ADMIN_TYPE_1_USER_NAME);
 
         if (adminUser.isPresent()) {
             poll.setAdmin(adminUser.get());
@@ -95,7 +95,7 @@ public class PollService {
             int percentage = (int) ((opt.getVoteCount() * 100.0) / poll.getTotalVote());
             opt.setVotePercentage(percentage);
         }
-        Optional<Voter> voter =  voterRepository.findByUsername(username);
+        Optional<User> voter =  voterRepository.findByUsername(username);
         if (voter.isPresent()) {
             voter.get().getVotedPolls().add(poll);
             voterRepository.save(voter.get());
@@ -117,7 +117,7 @@ public class PollService {
 
 
     public String subscribeToPoll(Long pollId, String username) {
-        Voter voter = voterRepository.findByUsername(username)
+        User voter = voterRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voter not found"));
         Poll poll = pollRepository.findByPollId(pollId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Poll not found"));
@@ -134,7 +134,7 @@ public class PollService {
     }
 
     public String unsubscribeFromPoll(Long pollId, String username) {
-        Voter voter = voterRepository.findByUsername(username)
+        User voter = voterRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voter not found"));
         Poll poll = pollRepository.findByPollId(pollId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Poll not found"));

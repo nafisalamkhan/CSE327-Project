@@ -1,6 +1,6 @@
 package org.example.onlinevotingsystem.services;
 
-import org.example.onlinevotingsystem.models.Voter;
+import org.example.onlinevotingsystem.models.User;
 import org.example.onlinevotingsystem.repositories.VoterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,22 +20,22 @@ public class VoterService {
     private VoterRepository voterRepository;
 
     // Get Voter by NID
-    public Optional<Voter> getVoterByNid(int nid) {
+    public Optional<User> getVoterByNid(int nid) {
         return voterRepository.findById(nid);
     }
 
     // Get Voter by Username
-    public Optional<Voter> getVoterByUsername(String username) {
+    public Optional<User> getVoterByUsername(String username) {
         return voterRepository.findByUsername(username);
     }
 
     // Get Voter by Email
-    public Optional<Voter> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return voterRepository.findByEmail(email);
     }
 
     // Create or Update Voter
-    public Voter saveVoter(Voter voter) {
+    public User saveVoter(User voter) {
         if (voterRepository.findByUsername(voter.getUsername()).isPresent()) {
             throw new UsernameNotFoundException("Username already exists");
         }
@@ -43,13 +43,13 @@ public class VoterService {
     }
 
     public void enableVoter(int nid) {
-        Voter voter = voterRepository.findById(nid).orElseThrow();
+        User voter = voterRepository.findById(nid).orElseThrow();
         voter.setEnabled(true);
         voterRepository.save(voter);
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Voter voter = voterRepository.findByUsername(username)
+        User voter = voterRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         List<GrantedAuthority> authorities = Collections.singletonList(

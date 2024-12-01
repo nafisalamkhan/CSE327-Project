@@ -28,9 +28,6 @@ public class Poll {
     @Column(name = "Title", nullable = false)
     private String title;
 
-    @Column(name = "type")
-    private String type;
-
     @Column(name = "PollDate")
     private String pollDate;
 
@@ -39,7 +36,7 @@ public class Poll {
 
     @ManyToOne
     @JoinColumn(name = "AdminID", nullable = false)
-    private Voter admin;
+    private User admin;
 
     @ManyToOne
     @JoinColumn(name = "CategoryID", nullable = false)
@@ -49,11 +46,11 @@ public class Poll {
     private List<Option> options;
 
     @ManyToMany(mappedBy = "votedPolls")
-    private List<Voter> voters;
+    private List<User> voters;
 
     @ManyToMany
     @JoinTable(name = "poll_voter_subscription", joinColumns = @JoinColumn(name = "poll_id"), inverseJoinColumns = @JoinColumn(name = "NID"))
-    private List<Voter> subscribedVoters = new ArrayList<>();
+    private List<User> subscribedVoters = new ArrayList<>();
 
     @Column(name = "voting_strategy")
     private String votingStrategy;
@@ -65,18 +62,18 @@ public class Poll {
 
 
     // Subscribe a voter to the poll
-    public void subscribe(Voter voter) {
+    public void subscribe(User voter) {
         subscribedVoters.add(voter);
     }
 
     // Unsubscribe a voter from the poll
-    public void unsubscribe(Voter voter) {
+    public void unsubscribe(User voter) {
         subscribedVoters.remove(voter);
     }
 
     // Notify all subscribed voters about an update
     public void notifyVoters(String message, NotificationRepository notificationRepository, String username) {
-        for (Voter voter : subscribedVoters) {
+        for (User voter : subscribedVoters) {
             if (voter.getUsername().equals(username)) {
                 continue;
             }

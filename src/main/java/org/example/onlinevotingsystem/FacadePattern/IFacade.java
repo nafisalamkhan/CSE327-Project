@@ -1,6 +1,6 @@
 package org.example.onlinevotingsystem.FacadePattern;
 
-import org.example.onlinevotingsystem.auth.User;
+import org.example.onlinevotingsystem.models.User;
 
 public interface IFacade {
 

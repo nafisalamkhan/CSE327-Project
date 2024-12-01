@@ -1,7 +1,7 @@
 package org.example.onlinevotingsystem.DecoratorPattern;
 
 import org.example.onlinevotingsystem.models.Poll;
-import org.example.onlinevotingsystem.models.Voter;
+import org.example.onlinevotingsystem.models.User;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ public class BasePollDecorator implements IPollDecorator {
     protected Poll poll;
 
     public BasePollDecorator(Poll poll){
+
         this.poll = poll;
     }
 
@@ -22,12 +23,13 @@ public class BasePollDecorator implements IPollDecorator {
     }
 
     @Override
-    public void performOperation(String message, String username, List<Voter> voters) {
+    public void performOperation(String message, String username, List<User> voters) {
         System.out.println("Default poll operation");
     }
 
     @Override
     public Poll getPoll() {
+
         return this.poll;
     }
 }

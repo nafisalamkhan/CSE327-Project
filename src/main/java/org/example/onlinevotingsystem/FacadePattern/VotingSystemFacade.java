@@ -1,11 +1,7 @@
 package org.example.onlinevotingsystem.FacadePattern;
 
 
-import org.example.onlinevotingsystem.auth.User;
-import org.example.onlinevotingsystem.auth.UserService;
-import org.example.onlinevotingsystem.models.Constants;
-import org.example.onlinevotingsystem.services.NotificationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.onlinevotingsystem.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

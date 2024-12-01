@@ -19,7 +19,7 @@ public class PollRequest {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private boolean isActive;
-    private Voter admin;
+    private User admin;
     private String type;
 
 

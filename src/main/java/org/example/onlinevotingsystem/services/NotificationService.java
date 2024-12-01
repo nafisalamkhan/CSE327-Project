@@ -4,9 +4,8 @@ package org.example.onlinevotingsystem.services;
 
 import java.util.List;
 
-import org.example.onlinevotingsystem.auth.User;
 import org.example.onlinevotingsystem.models.Notification;
-import org.example.onlinevotingsystem.models.Voter;
+import org.example.onlinevotingsystem.models.User;
 import org.example.onlinevotingsystem.repositories.NotificationRepository;
 import org.example.onlinevotingsystem.repositories.VoterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public List<Notification> getAllNotifications(Voter voter) {
+    public List<Notification> getAllNotifications(User voter) {
 
         return notificationRepository.findByRecipient(voter);
 

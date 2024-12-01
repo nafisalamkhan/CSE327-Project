@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.onlinevotingsystem.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,6 @@ import org.example.onlinevotingsystem.services.NotificationService;
 import org.example.onlinevotingsystem.services.PollService;
 import org.example.onlinevotingsystem.models.Notification;
 import org.example.onlinevotingsystem.models.Poll;
-import org.example.onlinevotingsystem.models.Voter;
 
 
 @Controller
@@ -58,7 +58,7 @@ public class PollController {
     @GetMapping("/polls")
     public String showPollsForVoting(Model model,  Principal principal) {
         List<Poll> polls = pollService.getAllPolls();
-        Optional<Voter> currentUser = voterRepository.findByUsername(principal.getName());
+        Optional<User> currentUser = voterRepository.findByUsername(principal.getName());
 
         if (currentUser.isPresent()) {
             model.addAttribute("currentUser", currentUser.get());

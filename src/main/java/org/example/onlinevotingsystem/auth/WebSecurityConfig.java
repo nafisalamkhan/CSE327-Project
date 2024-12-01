@@ -1,5 +1,7 @@
 package org.example.onlinevotingsystem.auth;
 
+
+import org.example.onlinevotingsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +21,16 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 public class WebSecurityConfig {
 
     private final AuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final UserService userDetailsService;
 
     @Autowired // optional
-    public WebSecurityConfig(AuthenticationFailureHandler customAuthenticationFailureHandler) {
+    public WebSecurityConfig(AuthenticationFailureHandler customAuthenticationFailureHandler,
+                             UserService userDetailsService, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
         this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
+        this.userDetailsService = userDetailsService;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+
     }
 
     @Bean
@@ -36,7 +44,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
                 )
                 .logout(logout -> logout
@@ -44,8 +52,8 @@ public class WebSecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/403")
-                );
+                        .accessDeniedPage("/403"))
+                        .userDetailsService(userDetailsService);
 
         return http.build();
     }
