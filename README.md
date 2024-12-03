@@ -36,3 +36,4 @@ In total 6 desgin patterns are implemented here.
 * Decorator
 * Strategy
 * Observer
+* Facade
