@@ -3,7 +3,6 @@ package org.example.onlinevotingsystem.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.onlinevotingsystem.StrategyPattern.PollResult;
 import org.example.onlinevotingsystem.repositories.NotificationRepository;
 
 import jakarta.persistence.*;
@@ -57,7 +56,6 @@ public class Poll {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "poll_result_id", referencedColumnName = "id")
-    private PollResult pollResults;
 
 
 
