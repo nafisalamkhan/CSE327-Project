@@ -11,9 +11,10 @@ public class TimePollFactory implements PollFactory {
         timePoll.setCategory(request.getCategory());
         timePoll.setStartTime(request.getStartTime());
         timePoll.setEndTime(request.getEndTime());
+        timePoll.setVotingStrategy(request.getVotingStrategy());
+        timePoll.setWeight(request.getWeight());
+
         return timePoll;
     }
-
-
 
 }

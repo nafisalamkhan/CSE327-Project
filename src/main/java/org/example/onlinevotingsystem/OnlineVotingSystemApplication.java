@@ -1,8 +1,8 @@
 package org.example.onlinevotingsystem;
 
 import org.example.onlinevotingsystem.models.Role;
-import org.example.onlinevotingsystem.repositories.RoleRepository;
 import org.example.onlinevotingsystem.models.User;
+import org.example.onlinevotingsystem.repositories.RoleRepository;
 import org.example.onlinevotingsystem.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,6 +28,7 @@ public class OnlineVotingSystemApplication {
                 roleRepository.save(new Role("ROLE_ADMIN_POLL_Manager"));
                 roleRepository.save(new Role("ROLE_ADMIN_USER_Approver"));
 
+
                 User admin = new User();
                 admin.setName("Super Admin");
                 admin.setUsername("admin-1");
@@ -45,6 +46,8 @@ public class OnlineVotingSystemApplication {
                 admin.setEnabled(true);
                 admin.setRoles(Set.of(roleRepository.findByName("ROLE_ADMIN_USER_Approver").get()));
                 userRepository.save(admin);
+
+
             }
         };
     }

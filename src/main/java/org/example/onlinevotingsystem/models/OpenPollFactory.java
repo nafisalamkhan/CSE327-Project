@@ -9,6 +9,8 @@ public class OpenPollFactory implements PollFactory {
         openPoll.setOptions(request.getOptions());
         openPoll.setCategory(request.getCategory());
         openPoll.setAdmin(request.getAdmin());
+        openPoll.setVotingStrategy(request.getVotingStrategy());
+        openPoll.setWeight(request.getWeight());
         return openPoll;
     }
 

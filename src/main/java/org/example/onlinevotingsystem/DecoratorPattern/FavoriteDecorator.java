@@ -14,6 +14,8 @@ public class FavoriteDecorator extends  BasePollDecorator{
         this.pollService = pollService;
     }
 
+
+
     @Override
     public boolean performOperation(String message, String username, List<User> voters) {
         return pollService.toggleFavorite((long)poll.getPollId(), username);

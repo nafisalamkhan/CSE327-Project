@@ -1,9 +1,13 @@
 package org.example.onlinevotingsystem.services;
 
-import jakarta.persistence.EntityNotFoundException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.example.onlinevotingsystem.models.Role;
-import org.example.onlinevotingsystem.repositories.RoleRepository;
 import org.example.onlinevotingsystem.models.User;
+import org.example.onlinevotingsystem.repositories.RoleRepository;
 import org.example.onlinevotingsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,10 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -36,11 +37,13 @@ public class UserService implements UserDetailsService {
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("User Role not set."));
         user.setRoles(Set.of(userRole));
+
         return userRepository.save(user);
     }
 
     public List<User> findUsers() {
-        return userRepository.findAllByRolesIn(Set.of(roleRepository.findByName("ROLE_USER").map(Role::getId).orElseThrow()));
+        return userRepository
+                .findAllByRolesIn(Set.of(roleRepository.findByName("ROLE_USER").map(Role::getId).orElseThrow()));
     }
 
     public void enableUser(Long userId) {
@@ -48,7 +51,6 @@ public class UserService implements UserDetailsService {
         user.setEnabled(true);
         userRepository.save(user);
     }
-
 
     // Get User by NID
     public Optional<User> getVoterByNid(long nid) {
@@ -81,14 +83,11 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-
         System.out.println("Retrieved user: " + user.getUsername());
         System.out.println("Is user enabled? " + user.isEnabled());
         System.out.println("User roles: " + user.getRoles());
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), user.isEnabled(), true, true,
-                true, mapRolesToAuthorities(user.getRoles()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                user.isEnabled(), true, true, true, mapRolesToAuthorities(user.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
