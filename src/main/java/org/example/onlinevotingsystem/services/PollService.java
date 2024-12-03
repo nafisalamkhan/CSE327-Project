@@ -1,26 +1,33 @@
 package org.example.onlinevotingsystem.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.example.onlinevotingsystem.DecoratorPattern.BasePollDecorator;
 import org.example.onlinevotingsystem.DecoratorPattern.FavoriteDecorator;
 import org.example.onlinevotingsystem.DecoratorPattern.IPollDecorator;
-import org.example.onlinevotingsystem.DecoratorPattern.NotificationDecorator;
+import org.example.onlinevotingsystem.StrategyPattern.FirstPastThePostStrategy;
+import org.example.onlinevotingsystem.StrategyPattern.PollResult;
+import org.example.onlinevotingsystem.StrategyPattern.VotingStrategy;
+import org.example.onlinevotingsystem.StrategyPattern.WeightedVotingStrategy;
+import org.example.onlinevotingsystem.models.Constants;
+import org.example.onlinevotingsystem.models.OpenPollFactory;
+import org.example.onlinevotingsystem.models.Option;
 import org.example.onlinevotingsystem.models.Poll;
-import org.example.onlinevotingsystem.repositories.NotificationRepository;
+import org.example.onlinevotingsystem.models.PollFactory;
+import org.example.onlinevotingsystem.models.PollRequest;
+import org.example.onlinevotingsystem.models.TimePollFactory;
+import org.example.onlinevotingsystem.models.User;
 import org.example.onlinevotingsystem.repositories.OptionRepository;
 import org.example.onlinevotingsystem.repositories.PollRepository;
-import org.example.onlinevotingsystem.repositories.VoterRepository;
+import org.example.onlinevotingsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.example.onlinevotingsystem.*;
-
-import java.util.*;
-
-import org.example.onlinevotingsystem.repositories.*;
-import org.example.onlinevotingsystem.controllers.*;
-import org.example.onlinevotingsystem.models.*;
-
 
 @Service
 public class PollService {
@@ -32,37 +39,43 @@ public class PollService {
     private OptionRepository optionRepository;
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private UserService adminService;
 
     @Autowired
-    private VoterService adminService;
+    private UserRepository voterRepository;
 
     @Autowired
-    private VoterRepository voterRepository;
+    private NotificationService notificationService;
 
-    //factory
     private final Map<String, PollFactory> factories;
+    private final Map<String, VotingStrategy> votingStrategies;
 
     public PollService() {
 
         factories = new HashMap<>();
         factories.put("OPEN", new OpenPollFactory());
         factories.put("TIME", new TimePollFactory());
+
+        votingStrategies = new HashMap<>();
+        votingStrategies.put(Constants.TRADITIONAL_METHOD, new FirstPastThePostStrategy());
+        votingStrategies.put(Constants.WEIGHTED_METHOD, new WeightedVotingStrategy(null));
     }
 
-
     public List<Poll> getAllPolls() {
-
         return pollRepository.findAll();
     }
 
-    public void createPollWithOptions(PollRequest poll, List<String> optionTitles, String type) {
-
+    public void createPollWithOptions(PollRequest poll, List<String> optionTitles, List<String> optionWeights,
+                                      String type) {
 
         Optional<User> adminUser = adminService.getVoterByUsername(Constants.ADMIN_TYPE_1_USER_NAME);
 
         if (adminUser.isPresent()) {
             poll.setAdmin(adminUser.get());
+        }
+        if (poll.getVotingStrategy().equals(Constants.WEIGHTED_METHOD) && optionWeights.size() == optionTitles.size()) {
+            String weights = String.join("-", optionWeights);
+            poll.setWeight(weights);
         }
 
         PollFactory factory = factories.get(type);
@@ -78,7 +91,6 @@ public class PollService {
             optionRepository.save(option);
         }
     }
-
 
     public void castVote(int optionId, String username) {
         // Fetch the Option

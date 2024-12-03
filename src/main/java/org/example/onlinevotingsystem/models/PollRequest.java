@@ -21,6 +21,9 @@ public class PollRequest {
     private boolean isActive;
     private User admin;
     private String type;
+    private String votingStrategy;
+    private String weight;
+
 
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IPollDecorator {
 
-    void  performOperation(String message, String username, List<User> voters);
+    boolean  performOperation(String message, String username, List<User> voters);
 
     Poll getPoll();
 }

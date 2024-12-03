@@ -1,32 +1,10 @@
 package org.example.onlinevotingsystem.controllers;
 
-/*import org.example.onlinevotingsystem.repositories.PollRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
-@Controller
-public class PollController {
-
-    @Autowired
-    private PollRepository pollRepository;
-
-    @GetMapping(path = "/polls")
-    public String getPolls(Model model) {
-        model.addAttribute("polls", pollRepository.findAll());
-        return "polls";
-    }
-}
-*/
-
-
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.example.onlinevotingsystem.models.User;
+import org.example.onlinevotingsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,7 +20,6 @@ import org.example.onlinevotingsystem.services.PollService;
 import org.example.onlinevotingsystem.models.Notification;
 import org.example.onlinevotingsystem.models.Poll;
 
-
 @Controller
 public class PollController {
 
@@ -50,7 +27,7 @@ public class PollController {
     private PollService pollService;
 
     @Autowired
-    private VoterRepository voterRepository;
+    private UserRepository voterRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -58,6 +35,9 @@ public class PollController {
     @GetMapping("/polls")
     public String showPollsForVoting(Model model,  Principal principal) {
         List<Poll> polls = pollService.getAllPolls();
+        // reverse polls
+        Collections.reverse(polls);
+
         Optional<User> currentUser = voterRepository.findByUsername(principal.getName());
 
         if (currentUser.isPresent()) {
@@ -68,6 +48,19 @@ public class PollController {
             long unreadCount = notifications.stream().filter(n -> !n.isRead()).count();
             model.addAttribute("unreadcount", unreadCount);
             model.addAttribute("notifications", notifications);
+
+            // already votted map of current user
+            Map<Integer, Boolean> map;
+            map = pollService.getAlreadyVottedMap(currentUser.get());
+            model.addAttribute("alreadyVottedMap", map);
+
+            Map<Integer, Boolean> votedOptions = pollService.getVotedOptions(polls, currentUser.get().getId());
+            model.addAttribute("vottedOptionsMap", votedOptions);
+
+        }else {
+            model.addAttribute("currentUser", null);
+            model.addAttribute("vottedOptionsMap", new HashMap<Long, Boolean>());
+            model.addAttribute("alreadyVottedMap", new HashMap<Integer, Boolean>());
         }
 
         model.addAttribute("polls", polls);

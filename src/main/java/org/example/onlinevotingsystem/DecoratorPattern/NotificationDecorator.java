@@ -17,18 +17,9 @@ public class NotificationDecorator extends BasePollDecorator{
     }
 
     @Override
-    public void performOperation(String message, String username, List<User> voters) {
-        notifyVoters(message, username, voters);
-    }
+    public boolean performOperation(String message, String username, List<User> voters) {
+        return notificationService.notifyVoters(message, username, voters, poll);
 
-    private void notifyVoters(String message, String username, List<User> subscribedvoters){
-        for(User voter : subscribedvoters){
-            if (voter.getUsername().equals(username)){
-                continue;
-            }
-            Notification notification = new Notification(message, voter, poll, Notification.NotificationType.POLL_UPDATED);
-            notificationRepository.save(notification);
-        }
     }
 
 }

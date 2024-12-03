@@ -23,8 +23,14 @@ public class BasePollDecorator implements IPollDecorator {
     }
 
     @Override
-    public void performOperation(String message, String username, List<User> voters) {
-        System.out.println("Default poll operation");
+    public boolean performOperation(String message, String username, List<User> voters) {
+        try {
+
+            System.out.println("Default poll operation");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

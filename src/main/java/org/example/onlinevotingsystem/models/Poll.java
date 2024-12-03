@@ -3,6 +3,7 @@ package org.example.onlinevotingsystem.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.onlinevotingsystem.StrategyPattern.PollResult;
 import org.example.onlinevotingsystem.repositories.NotificationRepository;
 
 import jakarta.persistence.*;
@@ -34,7 +35,7 @@ public class Poll {
     private int totalVote;
 
     @ManyToOne
-    @JoinColumn(name = "AdminID", nullable = false)
+    @JoinColumn(name = "AdminID")
     private User admin;
 
     @ManyToOne
@@ -56,8 +57,9 @@ public class Poll {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "poll_result_id", referencedColumnName = "id")
+    private PollResult pollResults;
 
-
+    private String weight;
 
     // Subscribe a voter to the poll
     public void subscribe(User voter) {
@@ -69,17 +71,11 @@ public class Poll {
         subscribedVoters.remove(voter);
     }
 
-    // Notify all subscribed voters about an update
-    public void notifyVoters(String message, NotificationRepository notificationRepository, String username) {
-        for (User voter : subscribedVoters) {
-            if (voter.getUsername().equals(username)) {
-                continue;
-            }
-            Notification notification = new Notification(message, voter, this,
-                    Notification.NotificationType.POLL_UPDATED);
-            notificationRepository.save(notification);
-        }
+
+    public String getType() {
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
     }
+
 
 
 }

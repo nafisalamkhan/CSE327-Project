@@ -2,28 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Poll</title>
+    <link th:href="@{/style.css}" rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+    <!-- Optional: Font Awesome for icons -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 40px 0;
+        :root {
+            --primary-color: #900C3F;
+            --secondary-color: #900C3F;
+            --background-color: rgb(248, 248, 248);
+            --card-background: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
         }
 
-        .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            max-width: 800px;
+        body {
+            background: rgb(248, 248, 248);
+            min-height: 100vh;
         }
 
         .form-title {
-            color: #2c3e50;
-            font-weight: 700;
+            color: var(--primary-color);
+            font-weight: 400;
             margin-bottom: 2rem;
             text-align: center;
             border-bottom: 2px solid #eee;
@@ -38,13 +48,12 @@
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: #6366f1;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
         }
 
         .form-label {
             font-weight: 600;
-            color: #4a5568;
             margin-bottom: 0.5rem;
         }
 
@@ -56,7 +65,7 @@
         }
 
         .btn-primary {
-            background: #6366f1;
+            background: var(--primary-color);
             border: none;
         }
 
@@ -113,23 +122,35 @@
         }
 
         .section-title {
-            color: #6366f1;
+            color: var(--primary-color);
             font-size: 1.1rem;
             margin-bottom: 1rem;
             font-weight: 600;
         }
+
+        .table-container {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
-<div class="container animate__animated animate__fadeIn">
-    <h1 class="form-title">Create New Poll</h1>
+<div class="container animate__animated animate__fadeIn py-3 px-2 ">
+    <div th:replace="~{fragments/navbar :: navbarFragment}"></div>
+
+    <h2 class="form-title">Create New Poll</h2>
 
     <div th:if="${message != null}" th:text="${message}"
          th:classappend="${error != null} ? 'text-danger message' : 'text-success message'">
     </div>
+    <div th:if="${!isAdminApprover}" th:text="${error}"
+         class="text-danger message"></div>
 
     <form th:action="@{/admin-create-poll}" th:object="${poll}"
-          method="post">
+          th:if="${isAdminApprover}" method="post" class="table-container">
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="section-title">Basic Information</div>
@@ -146,6 +167,14 @@
                         id="type" class="form-select" th:field="*{type}" required>
                     <option value="OPEN">Open Poll</option>
                     <option value="TIME">Timed Poll</option>
+                </select>
+                </div>
+                <div class="mb-3">
+                    <label for="type" class="form-label">Voting Result
+                        Strategy</label> <select id="strategyType" class="form-select"
+                                                 th:field="*{votingStrategy}" required>
+                    <option value="TRADITIONAL">Traditional Method</option>
+                    <option value="WEIGHTED">Weighted Method</option>
                 </select>
                 </div>
 
@@ -176,13 +205,19 @@
             <div class="col-md-6 mb-4">
                 <div class="section-title">Poll Options</div>
                 <div id="options-container">
-                    <div class="option-container mb-3">
-                        <input type="text" name="optionTitles[]" class="form-control"
-                               placeholder="Option 1" required>
+                    <div class="option-container mb-3 d-flex align-items-center">
+                        <input type="text" name="optionTitles[]"
+                               class="form-control me-2" placeholder="Option 1" required>
+                        <input type="number" name="optionWeights[]"
+                               class="form-control weight-input" placeholder="Weight" min="1"
+                               value="1" style="display: none; width: 100px;">
                     </div>
-                    <div class="option-container mb-3">
-                        <input type="text" name="optionTitles[]" class="form-control"
-                               placeholder="Option 2" required>
+                    <div class="option-container mb-3 d-flex align-items-center">
+                        <input type="text" name="optionTitles[]"
+                               class="form-control me-2" placeholder="Option 2" required>
+                        <input type="number" name="optionWeights[]"
+                               class="form-control weight-input" placeholder="Weight" min="1"
+                               value="1" style="display: none; width: 100px;">
                     </div>
                 </div>
                 <button type="button" class="btn btn-secondary mb-4"
@@ -200,54 +235,63 @@
 <script>
     function addOption() {
         const container = document.getElementById('options-container');
-        const optionCount = container.children.length + 1;
+        const newOptionContainer = document.createElement('div');
+        newOptionContainer.className = 'option-container mb-3 d-flex align-items-center';
 
-        const optionContainer = document.createElement('div');
-        optionContainer.className = 'option-container mb-3';
+        const titleInput = document.createElement('input');
+        titleInput.type = 'text';
+        titleInput.name = 'optionTitles[]';
+        titleInput.className = 'form-control me-2';
+        titleInput.placeholder = `Option ${container.children.length + 1}`;
+        titleInput.required = true;
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'optionTitles[]';
-        input.className = 'form-control';
-        input.placeholder = `Option ${optionCount}`;
-        input.required = true;
+        const weightInput = document.createElement('input');
+        weightInput.type = 'number';
+        weightInput.name = 'optionWeights[]';
+        weightInput.className = 'form-control weight-input';
+        weightInput.placeholder = 'Weight';
+        weightInput.min = '1';
+        weightInput.value = '1';
+        weightInput.style.display =
+            document.getElementById('strategyType').value === 'WEIGHTED' ? 'block' : 'none';
+        weightInput.style.width = '100px';
 
-        const removeBtn = document.createElement('span');
-        removeBtn.innerHTML = '×';
-        removeBtn.className = 'remove-option';
-        removeBtn.onclick = function() {
-            container.removeChild(optionContainer);
-        };
+        newOptionContainer.appendChild(titleInput);
+        newOptionContainer.appendChild(weightInput);
 
-        optionContainer.appendChild(input);
-        optionContainer.appendChild(removeBtn);
-        container.appendChild(optionContainer);
-
-        input.focus();
+        container.appendChild(newOptionContainer);
     }
 
-    document.getElementById('type').addEventListener('change', function() {
-        var type = this.value;
-        var timeFields = document.getElementById('timeFields');
-        var startTimeInput = document.getElementById('startTime');
-        var endTimeInput = document.getElementById('endTime');
+        document.getElementById('strategyType').addEventListener('change', function() {
+            const weightInputs = document.querySelectorAll('.weight-input');
+            weightInputs.forEach(input => {
+                input.style.display = this.value === 'WEIGHTED' ? 'block' : 'none';
+            });
+        });
 
-        if (type === 'TIME') {
-            timeFields.style.display = 'block';
-            startTimeInput.required = true;
-            endTimeInput.required = true;
-        } else {
-            timeFields.style.display = 'none';
-            startTimeInput.required = false;
-            endTimeInput.required = false;
-            // Clear the inputs when hiding
-            startTimeInput.value = '';
-            endTimeInput.value = '';
-        }
-    });
+        document.getElementById('type').addEventListener('change', function() {
+            var type = this.value;
+            var timeFields = document.getElementById('timeFields');
+            var startTimeInput = document.getElementById('startTime');
+            var endTimeInput = document.getElementById('endTime');
 
-    // Call on page load to set initial state
-    //document.addEventListener('DOMContentLoaded', toggleTimeFields);
+            if (type === 'TIME') {
+                timeFields.style.display = 'block';
+                startTimeInput.required = true;
+                endTimeInput.required = true;
+            } else {
+                timeFields.style.display = 'none';
+                startTimeInput.required = false;
+                endTimeInput.required = false;
+                // Clear the inputs when hiding
+                startTimeInput.value = '';
+                endTimeInput.value = '';
+            }
+        });
+
+        // Call on page load to set initial state
+        //document.addEventListener('DOMContentLoaded', toggleTimeFields);
 </script>
+<script th:src="@{/notification.js}"></script>
 </body>
 </html>
