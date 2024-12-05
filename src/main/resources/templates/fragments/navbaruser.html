@@ -28,6 +28,9 @@
                 <li><a th:href="@{/favorites}"
                        th:class="${currentPage == 'favorites'} ? 'active' : ''">
                     Favorites </a></li>
+                <li><a th:href="@{/profile}"
+                       th:class="${currentPage == 'profile'} ? 'active' : ''">
+                    Profile </a></li>
                 <li style="margin-left: auto"><a th:href="@{/logout}"
                                                  style="color: #ffffff;"><i
                         class="fa-solid fa-arrow-right-from-bracket"
