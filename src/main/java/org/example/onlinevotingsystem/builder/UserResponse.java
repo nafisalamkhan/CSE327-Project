@@ -1,4 +1,4 @@
-package org.example.onlinevotingsystem.models;
+package org.example.onlinevotingsystem.builder;
 
 import java.util.HashSet;
 import java.util.Set;

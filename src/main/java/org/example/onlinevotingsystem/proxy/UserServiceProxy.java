@@ -1,4 +1,4 @@
-package org.example.onlinevotingsystem.auth;
+package org.example.onlinevotingsystem.proxy;
 
 import org.example.onlinevotingsystem.models.User;
 import org.example.onlinevotingsystem.services.UserService;

@@ -4,7 +4,8 @@ import jakarta.validation.Valid;
 import org.example.onlinevotingsystem.FacadePattern.IFacade;
 import org.example.onlinevotingsystem.models.Role;
 import org.example.onlinevotingsystem.models.User;
-import org.example.onlinevotingsystem.models.UserResponse;
+import org.example.onlinevotingsystem.builder.UserResponse;
+import org.example.onlinevotingsystem.proxy.IUserServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,7 @@ public class AuthController {
     @GetMapping(value = "/profile")
     public String getUserProfile(Model model) {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // accessed using proxy object
         User user = userServiceProxy.findByUsername(principal.getUsername());
         model.addAttribute("currentPage", "profile");
         model.addAttribute("user", UserResponse.builder()
