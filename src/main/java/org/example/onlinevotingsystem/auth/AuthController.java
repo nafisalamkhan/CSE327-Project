@@ -53,9 +53,9 @@ public class AuthController {
 
     @GetMapping(value = "/profile")
     public String getUserProfile(Model model) {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // accessed using proxy object
-        User user = userServiceProxy.findByUsername(principal.getUsername());
+        User user = userServiceProxy.findAuthenticatedUser();
         model.addAttribute("currentPage", "profile");
         model.addAttribute("user", UserResponse.builder()
                 .id(user.getId())
