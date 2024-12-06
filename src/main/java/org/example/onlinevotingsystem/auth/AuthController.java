@@ -63,7 +63,6 @@ public class AuthController {
                 .name(user.getName())
                 .email(user.getEmail())
                 .enabled(user.isEnabled())
-                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
                 .build()
         );
         return "profile";

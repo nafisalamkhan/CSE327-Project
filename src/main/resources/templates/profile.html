@@ -71,7 +71,7 @@
 <body>
 <div class="profile-container">
     <!-- Navbar fragment -->
-    <div th:replace="~{fragments/navbar :: navbarFragment}"></div>
+    <div th:replace="~{fragments/navbaruser :: navbarFragment}"></div>
 
     <!-- Profile header -->
     <div class="profile-header">
@@ -88,9 +88,6 @@
             </li>
             <li class="list-group-item">
                 <strong>Username: </strong><span th:text="${user.username}">johndoe123</span>
-            </li>
-            <li class="list-group-item">
-                <strong>Roles: </strong><span th:text="${user.roles}">Admin, User</span>
             </li>
             <li class="list-group-item">
                 <strong>Status: </strong><span th:text="${user.enabled ? 'Active' : 'Inactive'}">Active</span>
